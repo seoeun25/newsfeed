@@ -41,7 +41,9 @@ $ bin/repo.sh start (|stop)
 | Method    | Path             | Description         | Parameters          | Return Object |
 | --------- | ---------------- | ------------------- | ------------------  |---------------|
 | GET       | /users/{id}      | userID로 조회         |                     | User          |
+| GET       | /users           | 모든 user 조회         |                     | a list of User  |
 | POST      | /users           | 새로운 user 생성       | name, email         | User          |
+| PUT       | /users/{id}      | user의 lastviewTime 수정 | lastviewTime     | User          |
 
 
 User
@@ -50,3 +52,35 @@ User
 * name - name
 * lastViewTime - 마지막 본 newsfeed의 timestamp. milliseconds.
 * createTime - user 생성 시간.  milliseconds.
+
+## followings
+
+| Method    | Path             | Description         | Parameters          | Return Object |
+| --------- | ---------------- | ------------------- | ------------------  |---------------|
+| GET       | /followings/{userId} | user가 following하는 user들 조회  |      | a list of Friend |
+| POST      | /followings          | user가 다른 사용자를 follow        | userId, followingId | Friend |
+
+
+Friend
+* userId- the id of user
+* followingId  - the userId of following
+* createTime - Friend 생성 시간.  milliseconds.
+
+## activities
+
+| Method    | Path             | Description         | Parameters          | Return Object |
+| --------- | ---------------- | ------------------- | ------------------  |---------------|
+| POST      | /activities      | post message        | userId, message     | Activity      |
+
+
+Activity
+* id - the activity id
+* userId- the id of user
+* message  - posting 내용
+* createTime - Activity 생성 시간.  milliseconds.
+
+## feeds
+
+| Method    | Path             | Description         | Parameters          | Return Object |
+| --------- | ---------------- | ------------------- | ------------------  |---------------|
+| GET       | /feeds/{userId}  | user의 구독 list      | userId              | a list of Activity |
