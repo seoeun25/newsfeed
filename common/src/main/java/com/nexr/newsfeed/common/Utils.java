@@ -4,11 +4,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 /**
  * Utility
  */
 public class Utils {
+
+    private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
     public static long parseTime(String timeString) throws ParseException {
         String pattern = "yyyy-MM-dd HH:mm:ss,SSS";
@@ -79,5 +83,10 @@ public class Utils {
         calendar.setTimeInMillis(basetime);
         calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + day);
         return calendar.getTimeInMillis();
+    }
+
+    public static boolean validEmail(String email) {
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        return pattern.matcher(email).matches();
     }
 }

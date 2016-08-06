@@ -37,4 +37,17 @@ public class UtilsTest {
             Assert.fail();
         }
     }
+
+    @Test
+    public void testEmailMatch() {
+        String a = "abc@email.com";
+        String b = "abc.com";
+        String c = "abc@";
+        String d = "abc@a";
+
+        Assert.assertEquals(true, Utils.validEmail(a));
+        Assert.assertEquals(false, Utils.validEmail(b));
+        Assert.assertEquals(false, Utils.validEmail(c));
+        Assert.assertEquals(false, Utils.validEmail(d));
+    }
 }

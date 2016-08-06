@@ -3,6 +3,7 @@ package com.nexr.newsfeed.service;
 import com.google.inject.Inject;
 import com.nexr.newsfeed.Context;
 import com.nexr.newsfeed.NewsfeedException;
+import com.nexr.newsfeed.common.Utils;
 import com.nexr.newsfeed.entity.User;
 import com.nexr.newsfeed.jpa.UserQueryExceutor;
 import org.slf4j.Logger;
@@ -37,6 +38,9 @@ public class UserService {
      */
     public User createUser(String email, String name) throws NewsfeedException {
         try {
+            if (!Utils.validEmail(email)) {
+                throw new NewsfeedException("No valid email: "+ email);
+            }
             User user = new User(email, name);
             userQueryExceutor.insertUser(user);
             return user;
