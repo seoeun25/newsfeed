@@ -63,17 +63,17 @@ public class UserQueryExecutorTest {
             Assert.assertNotNull(user2Re);
             Assert.assertEquals(user2.getName(), user2Re.getName());
             Assert.assertEquals(id2, user2Re.getId());
-            Assert.assertEquals(null, user2Re.getLastViewTime());
+            Assert.assertEquals(null, user2Re.getLastviewTime());
 
             // update
             long lastViewTime = System.currentTimeMillis();
-            user2Re.setLastViewTime(new Timestamp(lastViewTime));
+            user2Re.setLastviewTime(new Timestamp(lastViewTime));
             int updated = queryExecutor.executeUpdate(UserQueryExceutor.UserQuery.UPDATE_LASTVIEW_TIME, user2Re);
             Assert.assertEquals(1, updated);
             Thread.sleep(100);
             user2Re = queryExecutor.get(UserQueryExceutor.UserQuery.GET_BYID, new Object[]{id2});
-            Assert.assertNotNull(user2Re.getLastViewTime());
-            Assert.assertEquals(lastViewTime, user2Re.getLastViewTime().getTime());
+            Assert.assertNotNull(user2Re.getLastviewTime());
+            Assert.assertEquals(lastViewTime, user2Re.getLastviewTime().getTime());
             log.info("user2Re : {}", user2Re.toJson());
             log.info("user2Re : {}", user2Re.toString());
 
@@ -119,7 +119,7 @@ public class UserQueryExecutorTest {
             User userRe = queryExecutor.get(UserQueryExceutor.UserQuery.GET_BYID, new Object[]{id});
             Assert.assertNotNull(userRe);
             log.info("updated user : " + userRe);
-            Assert.assertEquals(null, userRe.getLastViewTime());
+            Assert.assertEquals(null, userRe.getLastviewTime());
 
             // not registered user. updated=1
             user = new User("nobody@email.com", "nobody");

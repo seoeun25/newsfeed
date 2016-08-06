@@ -87,7 +87,7 @@ User
 * id - the id
 * email - eamil
 * name - name
-* lastViewTime - 마지막 본 newsfeed의 timestamp. milliseconds.
+* lastviewTime - 마지막 본 newsfeed의 timestamp. milliseconds.
 * createTime - user 생성 시간.  milliseconds.
 
 ### followings

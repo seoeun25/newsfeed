@@ -61,10 +61,7 @@ public class Users {
     public Response updateLastviewTimeOf(@PathParam("id") String userId, @FormParam("lastviewTime") long lastviewTime) {
         log.debug("REST : updateLastviewTimeOf : id [{}], user [{}]", userId, lastviewTime);
         try {
-            User user = new User();
-            user.setId(Long.valueOf(userId));
-            user.setLastViewTime(new Date(lastviewTime));
-            User userUpdated = userService.updateLastviewTime(user);
+            User userUpdated = userService.updateLastviewTime(Long.valueOf(userId), lastviewTime);
             return Response.status(200).entity(userUpdated.toJson()).build();
         } catch (Exception e) {
             return Response.status(500).entity(Utils.convertErrorObjectToJson(500,
@@ -98,7 +95,7 @@ public class Users {
     @Produces("application/json")
     public Response getUsers() {
         try {
-            List<User> list = userService.getUers();
+            List<User> list = userService.getUsers();
             ObjectMapper mapper = new ObjectMapper();
             String jsonStr = mapper.writeValueAsString(list);
             return Response.status(200).entity(jsonStr).build();

@@ -69,7 +69,7 @@ public class UserQueryExceutor extends QueryExecutor<User, UserQueryExceutor.Use
         Query query = em.createNamedQuery(namedQuery.name());
         switch (namedQuery) {
             case UPDATE_LASTVIEW_TIME:
-                query.setParameter("lastViewTime", bean.getLastViewTime());
+                query.setParameter("lastviewTime", bean.getLastviewTime());
                 query.setParameter("id", bean.getId());
                 break;
             default:
@@ -114,7 +114,7 @@ public class UserQueryExceutor extends QueryExecutor<User, UserQueryExceutor.Use
                 bean.setId((Long) arr[0]);
                 bean.setName((String) arr[1]);
                 bean.setEmail((String) arr[2]);
-                bean.setLastViewTime((Date) arr[3]);
+                bean.setLastviewTime((Date) arr[3]);
                 bean.setCreatedTime((Date) arr[4]);
                 break;
             default:

@@ -94,16 +94,16 @@ public class NewsfeedWebClientTest {
 
         try {
             long lastViewTime = System.currentTimeMillis();
-            user1.setLastViewTime(new Timestamp(lastViewTime));
+            user1.setLastviewTime(new Timestamp(lastViewTime));
             User userUpdated = client.updateLastviewTimeOf(user1.getId(), lastViewTime);
             Assert.assertNotNull(userUpdated);
             Assert.assertEquals(user1.getId(), userUpdated.getId());
-            Assert.assertEquals(user1.getLastViewTime().getTime(), userUpdated.getLastViewTime().getTime());
+            Assert.assertEquals(user1.getLastviewTime().getTime(), userUpdated.getLastviewTime().getTime());
 
             // compare with retrieved User
             User userGet = client.getUser(user1.getId());
             Assert.assertNotNull(userGet);
-            Assert.assertEquals(userUpdated.getLastViewTime().getTime(), userGet.getLastViewTime().getTime());
+            Assert.assertEquals(userUpdated.getLastviewTime().getTime(), userGet.getLastviewTime().getTime());
 
             client.getUsers();
 
@@ -159,7 +159,7 @@ public class NewsfeedWebClientTest {
         try {
             User user = client.createUser("azrael40@email.com", "azrael40");
             long userId = user.getId();
-            Assert.assertNull(user.getLastViewTime());
+            Assert.assertNull(user.getLastviewTime());
             log.info("userId :  {}", userId);
             User user1 = client.createUser("x@email.com", "x");
             User user2 = client.createUser("y@email.com", "y");
@@ -205,8 +205,8 @@ public class NewsfeedWebClientTest {
 
             // if call getFeeds(), it update lastviewTime of User
             user = client.getUser(userId);
-            Assert.assertNotNull(user.getLastViewTime());
-            Assert.assertEquals(feeds.get(0).getCreatedTime().getTime(), user.getLastViewTime().getTime());
+            Assert.assertNotNull(user.getLastviewTime());
+            Assert.assertEquals(feeds.get(0).getCreatedTime().getTime(), user.getLastviewTime().getTime());
 
             // retrieve from lastviewTime
             feeds = client.getFeeds(userId);
@@ -229,7 +229,7 @@ public class NewsfeedWebClientTest {
             client.postMessage(user5.getId(), "message 11 - by 5");
             feeds = client.getFeeds(userId);
             Assert.assertEquals(2, feeds.size());
-            long lastviewTime = client.getUser(userId).getLastViewTime().getTime();
+            long lastviewTime = client.getUser(userId).getLastviewTime().getTime();
             Assert.assertTrue(lastviewTime >= basetime);
 
             feeds = client.getFeedsAll(basetime, 30, false);
@@ -242,7 +242,7 @@ public class NewsfeedWebClientTest {
                 Assert.assertTrue(activity.getCreatedTime().getTime() <= basetime);
             }
             // no need to udpate lastviewTime if setting value is before the current lastviewTime.
-            Assert.assertEquals(lastviewTime, client.getUser(userId).getLastViewTime().getTime());
+            Assert.assertEquals(lastviewTime, client.getUser(userId).getLastviewTime().getTime());
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -65,10 +65,10 @@ public class UserServiceTest {
     @Test
     public void testUpdateViewTime() {
         try {
-            List<User> userList = userService.getUers();
+            List<User> userList = userService.getUsers();
             User user = new User("nobody@email.com", "nobody");
             user.setId(userList.size() + 10);
-            User userRe = userService.updateLastviewTime(user);
+            User userRe = userService.updateLastviewTime(user.getId(), System.currentTimeMillis());
             log.info("----- userRe : " + userRe);
             Assert.fail("Can not update the unregistered user");
         }catch (NewsfeedException e) {
@@ -77,10 +77,9 @@ public class UserServiceTest {
 
         try {
             User user = userService.createUser("abcde@email.com", "abcde");
-            User userRe = userService.updateLastviewTime(user);
+            User userRe = userService.updateLastviewTime(user.getId(), 0);
             Assert.assertEquals(user.getId(), userRe.getId());
-            Assert.assertEquals(user.getLastViewTime(), userRe.getLastViewTime());
-            Assert.assertEquals(null, userService.getUser(user.getId()).getLastViewTime());
+            Assert.assertEquals(0, userService.getUser(user.getId()).getLastviewTime().getTime());
         } catch (NewsfeedException e) {
             Assert.fail("Fail to update");
         }

@@ -20,14 +20,13 @@ import java.util.Date;
 @Entity
 @NamedQueries({
 
-        @NamedQuery(name = "GET_BYID", query = "select a.id, a.name, a.email, a.lastViewTime, a.createdTime " +
+        @NamedQuery(name = "GET_BYID", query = "select a.id, a.name, a.email, a.lastviewTime, a.createdTime " +
                 "from User a where a.id = :id "),
-        @NamedQuery(name = "GET_USER_ALL", query = "select a.id, a.name, a.email, a.lastViewTime, a.createdTime from User a "),
-        @NamedQuery(name = "UPDATE_LASTVIEW_TIME", query = "update User a set a.lastViewTime = :lastViewTime where a.id = :id")
+        @NamedQuery(name = "GET_USER_ALL", query = "select a.id, a.name, a.email, a.lastviewTime, a.createdTime from User a "),
+        @NamedQuery(name = "UPDATE_LASTVIEW_TIME", query = "update User a set a.lastviewTime = :lastviewTime where a.id = :id")
 
 })
 @Table(name = "user")
-//@XmlRootElement
 public class User {
 
     @Id
@@ -55,8 +54,8 @@ public class User {
     // TODO lasteViewActivityTime가  맞을 듯.
     @Column(name = "last_view_time")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonProperty("lastViewTime")
-    private Date lastViewTime;
+    @JsonProperty("lastviewTime")
+    private Date lastviewTime;
 
     public User() {
 
@@ -65,7 +64,7 @@ public class User {
     public User(@JsonProperty("email") String email, @JsonProperty("name") String name) {
         this.email = email;
         this.name = name;
-        this.createdTime = new Date(System.currentTimeMillis());
+        this.createdTime = new Date();
     }
 
     public long getId() {
@@ -92,12 +91,12 @@ public class User {
         this.email = email;
     }
 
-    public Date getLastViewTime() {
-        return this.lastViewTime;
+    public Date getLastviewTime() {
+        return this.lastviewTime;
     }
 
-    public void setLastViewTime(Date lastViewTime) {
-        this.lastViewTime = lastViewTime;
+    public void setLastviewTime(Date lastviewTime) {
+        this.lastviewTime = lastviewTime;
     }
 
 
@@ -118,7 +117,7 @@ public class User {
         builder.append("id=" + id + ",");
         builder.append("name=" + name + ",");
         builder.append("email=" + email + ",");
-        builder.append("lastViewTime=" + (createdTime == null ? null : createdTime.getTime()) + ",");
+        builder.append("lastviewTime=" + (createdTime == null ? null : createdTime.getTime()) + ",");
         builder.append("createdTime=" + (createdTime == null ? null : createdTime.getTime()));
         return builder.toString();
     }

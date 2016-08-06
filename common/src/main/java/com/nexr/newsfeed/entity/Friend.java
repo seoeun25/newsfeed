@@ -61,7 +61,7 @@ public class Friend {
     public Friend(@JsonProperty("userId") long userId, @JsonProperty("followingId") long followingId) {
         this.userId = userId;
         this.followingId = followingId;
-        this.createdTime = new Date(System.currentTimeMillis());
+        this.createdTime = new Date();
     }
 
     public long getId() {

@@ -68,25 +68,8 @@ public class UserService {
      * @return a list of user
      * @throws NewsfeedException if an persistence exception occurs
      */
-    public List<User> getUers() throws NewsfeedException {
+    public List<User> getUsers() throws NewsfeedException {
         return userQueryExceutor.getList(UserQueryExceutor.UserQuery.GET_USER_ALL, new Object[]{});
-    }
-
-    /**
-     * Update the lastviewTime of user
-     *
-     * @param user a user to update the lastviewTime
-     * @return a user
-     * @throws NewsfeedException if no user representing a given {@code user}
-     */
-    public User updateLastviewTime(User user) throws NewsfeedException {
-        User userGet = userQueryExceutor.get(UserQueryExceutor.UserQuery.GET_BYID, new Object[]{user.getId()});
-        userGet.setLastViewTime(user.getLastViewTime());
-        int updated = userQueryExceutor.executeUpdate(UserQueryExceutor.UserQuery.UPDATE_LASTVIEW_TIME, userGet);
-        if (updated != 1) {
-            throw new NewsfeedException("Fail to updateLastViewTime, user: " + user + ", updatedRow=" + updated);
-        }
-        return userGet;
     }
 
     /**
@@ -97,13 +80,13 @@ public class UserService {
      * @throws NewsfeedException if no user representing a given {@code user}
      */
     public User updateLastviewTime(long userId, long lastviewTime) throws NewsfeedException {
-        User user = userQueryExceutor.get(UserQueryExceutor.UserQuery.GET_BYID, new Object[]{userId});
-        user.setLastViewTime(new Date(lastviewTime));
-        int updated = userQueryExceutor.executeUpdate(UserQueryExceutor.UserQuery.UPDATE_LASTVIEW_TIME, user);
+        User userGet = userQueryExceutor.get(UserQueryExceutor.UserQuery.GET_BYID, new Object[]{userId});
+        userGet.setLastviewTime(new Date(lastviewTime));
+        int updated = userQueryExceutor.executeUpdate(UserQueryExceutor.UserQuery.UPDATE_LASTVIEW_TIME, userGet);
         if (updated != 1) {
-            throw new NewsfeedException("Fail to updateLastViewTime, user: " + user + ", updatedRow=" + updated);
+            throw new NewsfeedException("Fail to updateLastViewTime, user: " + userGet + ", updatedRow=" + updated);
         }
-        return user;
+        return userGet;
     }
 
 }

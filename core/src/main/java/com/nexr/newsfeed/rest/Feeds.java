@@ -37,13 +37,13 @@ public class Feeds {
     @Path("/")
     @Produces("application/json")
     public Response getFeedsAll(@QueryParam("basetime") String basetime, @QueryParam("maxResult") int maxResult,
-                             @QueryParam("asc") String asc) {
+                                @QueryParam("asc") String asc) {
         log.debug(" REST : basetime [{}], maxResult [{}], asc [{}] ", basetime, maxResult, asc);
 
         try {
             long baseTime = basetime == null ? 0 : Long.valueOf(basetime);
             boolean bAsc = asc == null ? false : Boolean.parseBoolean(asc);
-            log.info("bAsc {}", bAsc );
+            log.info("bAsc {}", bAsc);
             List<Activity> feeds = feedService.getFeedsAll(baseTime, maxResult, bAsc);
 
             ObjectMapper mapper = new ObjectMapper();

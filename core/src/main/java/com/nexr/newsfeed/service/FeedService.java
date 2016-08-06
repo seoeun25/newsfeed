@@ -73,7 +73,7 @@ public class FeedService {
     }
 
     private long getLastviewTime(long userId) throws NewsfeedException {
-        Date date = userService.getUser(userId).getLastViewTime();
+        Date date = userService.getUser(userId).getLastviewTime();
         long baseTimestamp = date == null ? Utils.add(System.currentTimeMillis(), -1) : date.getTime();
         return baseTimestamp;
     }
@@ -243,7 +243,7 @@ public class FeedService {
     private boolean updateLastviewTime(long userId, long lastviewTime) {
         try {
             User user = userService.getUser(userId);
-            Date date = user.getLastViewTime();
+            Date date = user.getLastviewTime();
             if (date != null && lastviewTime <= date.getTime()) {
                 log.info("Current lastvieTime[{}] is after setting time[{}]. No need to update !! ", date.getTime(), lastviewTime);
                 return true;

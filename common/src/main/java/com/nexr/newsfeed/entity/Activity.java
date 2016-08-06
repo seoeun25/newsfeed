@@ -63,7 +63,7 @@ public class Activity {
     public Activity(@JsonProperty("userId") long userId, @JsonProperty("message") String message) {
         this.userId = userId;
         this.message = message;
-        this.createdTime = new Date(System.currentTimeMillis());
+        this.createdTime = new Date();
     }
 
     public long getId() {
