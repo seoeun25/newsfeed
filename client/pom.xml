@@ -33,6 +33,12 @@
         </dependency>
 
         <dependency>
+            <groupId>jline</groupId>
+            <artifactId>jline</artifactId>
+            <version>0.9.94</version>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
@@ -58,7 +64,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <descriptors>
-                        <descriptor>../src/main/assemblies/empty.xml</descriptor>
+                        <descriptor>../src/main/assemblies/client.xml</descriptor>
                     </descriptors>
                 </configuration>
             </plugin>

@@ -58,16 +58,10 @@ public class NewsfeedWebClient {
         this.baseUrl = baseUrl;
     }
 
-//    public String healthCheck() throws IOException, NewsfeedException {
-//        String path = ("");
-//        String message = httpRequest(path, "GET", null, new HashMap<String, String>(), STRING_TYPE);
-//        return message;
-//    }
-
     public User createUser(String email, String name) throws IOException, NewsfeedException {
         String path = String.format("/users");
-        String jsonString = "name=" + name + "&email=" + email;
-        User user = httpRequest(path, "POST", jsonString.getBytes(), new HashMap<String, String>(), USER_TYPE);
+        String formData = "name=" + name + "&email=" + email;
+        User user = httpRequest(path, "POST", formData.getBytes(), new HashMap<String, String>(), USER_TYPE);
         return user;
     }
 
@@ -79,8 +73,8 @@ public class NewsfeedWebClient {
 
     public User updateLastviewTimeOf(long id, long lastviewTime) throws IOException, NewsfeedException {
         String path = String.format("/users/%s", new Object[]{id});
-        String jsonString = "lastviewTime="+lastviewTime;
-        User userUpdated = httpRequest(path, "PUT", jsonString.getBytes(), new HashMap<String, String>(), USER_TYPE);
+        String formData = "lastviewTime="+lastviewTime;
+        User userUpdated = httpRequest(path, "PUT", formData.getBytes(), new HashMap<String, String>(), USER_TYPE);
         return userUpdated;
     }
 
@@ -92,8 +86,8 @@ public class NewsfeedWebClient {
 
     public Friend follow(long userId, long followingId) throws IOException, NewsfeedException {
         String path = String.format("/followings");
-        String jsonString = "userId=" + userId + "&followingId=" + followingId;
-        Friend friend = httpRequest(path, "POST", jsonString.getBytes(), new HashMap<String, String>(), FRIEND_TYPE);
+        String formData = "userId=" + userId + "&followingId=" + followingId;
+        Friend friend = httpRequest(path, "POST", formData.getBytes(), new HashMap<String, String>(), FRIEND_TYPE);
         return friend;
     }
 
@@ -105,8 +99,8 @@ public class NewsfeedWebClient {
 
     public Activity postMessage(long userId, String message) throws IOException, NewsfeedException {
         String path = String.format("/activities");
-        String jsonString = "userId=" + userId + "&message=" + message;
-        Activity activity = httpRequest(path, "POST", jsonString.getBytes(), new HashMap<String, String>(), ACTIVITY_TYPE);
+        String formData = "userId=" + userId + "&message=" + message;
+        Activity activity = httpRequest(path, "POST", formData.getBytes(), new HashMap<String, String>(), ACTIVITY_TYPE);
         return activity;
     }
 

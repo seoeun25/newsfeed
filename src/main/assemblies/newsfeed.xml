@@ -49,6 +49,23 @@
             </includes>
             <fileMode>0644</fileMode>
         </fileSet>
+
+        <fileSet>
+            <directory>${basedir}/../client/bin</directory>
+            <outputDirectory>newsfeed-${project.version}/bin</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+            <fileMode>0755</fileMode>
+        </fileSet>
+
+        <fileSet>
+            <directory>${basedir}/../client/target/newsfeed-client-0.9-SNAPSHOT-client/newsfeed-client-0.9-SNAPSHOT/lib/</directory>
+            <outputDirectory>newsfeed-${project.version}/lib</outputDirectory>
+            <includes>
+                <include>jline-0.9.94.jar</include>
+            </includes>
+        </fileSet>
     </fileSets>
 
     <dependencySets>
