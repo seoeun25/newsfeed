@@ -20,16 +20,22 @@ public class FeedService {
 
     private static Logger log = LoggerFactory.getLogger(FeedService.class);
 
+    public static final String FEED_MAXRESULT = "newsfeed.feed.maxresult";
+    public static final String FFED_INCLUDE_MINE = "newsfeed.feed.include.mine";
+
     private final Context context;
     private UserService userService;
     private ActivityQueryExceutor activityQueryExceutor;
     private FollowingService followingService;
-    private int defaultMaxResult = 20; // TODO configuration
-    private boolean includeMine = false; //TODO configuration
+    private int defaultMaxResult = 10;
+    private boolean includeMine = false;
 
     @Inject
     public FeedService(Context context) {
         this.context = context;
+        this.defaultMaxResult = context.getInt(FEED_MAXRESULT, 20);
+        this.includeMine = context.getBoolean(FFED_INCLUDE_MINE, false);
+
     }
 
     @Inject

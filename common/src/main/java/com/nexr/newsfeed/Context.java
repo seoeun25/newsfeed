@@ -10,10 +10,9 @@ import java.util.Properties;
 public class Context {
 
     private static Logger LOG = LoggerFactory.getLogger(Context.class);
-    private Properties properties;
-
     private final String siteConfig;
     private final String defaultConfig;
+    private Properties properties;
 
     @Inject
     public Context(@Named("siteConfig") String siteConfig, @Named("defaultConfig") String defaultConfig) {
@@ -63,6 +62,14 @@ public class Context {
     public int getInt(String name, int defaultValue) {
         try {
             return Integer.parseInt(getConfig(name));
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
+    public boolean getBoolean(String name, boolean defaultValue) {
+        try {
+            return Boolean.parseBoolean(getConfig(name));
         } catch (Exception e) {
             return defaultValue;
         }
