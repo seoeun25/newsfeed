@@ -129,27 +129,13 @@ public class FeedService {
      * @throws NewsfeedException
      */
     public List<Activity> getFeeds(long userId) throws NewsfeedException {
-        return getFeeds(userId, 0, true, defaultMaxResult, false);
+        return getFeeds(userId, 0, defaultMaxResult, false);
     }
 
     /**
      * <code>userId</code> 에 해당하는 user가 following하는 user들이 post한 message들을 리턴한다.
-     * <p> {@code baseTimestamp}를 기준으로 그 이후 posting된 message들을 리턴한다.
-     * <p> 리턴되는 feed의 수는 DefaultMaxResult 값(20) 이다.
-     * <p> Posting message의 created time을 기준으로 desc 정렬이 되어있기 때문에, 최신의 posting이 가장 앞에 있다.</p>
-     *
-     * @param userId        a id of user who get the feed
-     * @param baseTimestamp a base time to retrieve
-     * @return a list of activity
-     * @throws NewsfeedException
-     */
-    public List<Activity> getFeeds(long userId, long baseTimestamp) throws NewsfeedException {
-        return getFeeds(userId, baseTimestamp, true, defaultMaxResult, false);
-    }
-
-    /**
-     * <code>userId</code> 에 해당하는 user가 following하는 user들이 post한 message들을 리턴한다.
-     * <p> {@code baseTimestamp}를 기준으로 그 이후 posting된 message들을 리턴한다.
+     * <p> {@code baseTimestamp}를 기준으로 {@code maxResult}가 양수이면 그 이후 posting된 message들을,
+     * 음수이면 그 이전에 posting된 message들을 리턴한다.
      * <p> 리턴되는 feed의 수는 {@code maxResult} 이다.
      * <p> Posting message의 created time을 기준으로 desc 정렬이 되어있기 때문에, 최신의 posting이 가장 앞에 있다.</p>
      *
@@ -160,51 +146,48 @@ public class FeedService {
      * @throws NewsfeedException
      */
     public List<Activity> getFeeds(long userId, long baseTimestamp, int maxResult) throws NewsfeedException {
-        return getFeeds(userId, baseTimestamp, true, maxResult, false);
+        return getFeeds(userId, baseTimestamp, maxResult, false);
     }
 
     /**
      * <code>userId</code> 에 해당하는 user가 following하는 user들이 post한 message들을 리턴한다.
-     * <p> {@code baseTimestamp}를 기준으로 {@code forward}가 {@code true}이면 그 이후 posting된 message들을,
-     * {@code false}이면 그 이전에 posting된 message들을 리턴한다.
+     * <p> {@code baseTimestamp}를 기준으로 {@code maxResult}가 그 이후 posting된 message들을 리턴한다.
      * <p> 리턴되는 feed의 수는 DefaultMaxResult 값(20) 이다.
      * <p> Posting message의 created time을 기준으로 desc 정렬이 되어있기 때문에, 최신의 posting이 가장 앞에 있다.</p>
      *
      * @param userId        a id of user who get the feed
      * @param baseTimestamp a base time to retrieve
-     * @param forward       if true, feeds are after <code>baseTimestamp</code>, otherwise feeds are before <code>baseTimestamp</code>
      * @return a list of feed
      * @throws NewsfeedException
      */
-    public List<Activity> getFeeds(long userId, long baseTimestamp, boolean forward) throws NewsfeedException {
-        return getFeeds(userId, baseTimestamp, forward, defaultMaxResult, false);
+    public List<Activity> getFeeds(long userId, long baseTimestamp) throws NewsfeedException {
+        return getFeeds(userId, baseTimestamp, defaultMaxResult, false);
     }
 
     /**
      * <code>userId</code> 에 해당하는 user가 following하는 user들이 post한 message들을 리턴한다.
-     * <p> {@code baseTimestamp}를 기준으로 {@code forward}가 {@code true}이면 그 이후 posting된 message들을,
-     * {@code false}이면 그 이전에 posting된 message들을 리턴한다.
-     * <p> 리턴되는 feed의 수는 {@code maxResult} 이다.
-     * <p> Posting message의 created time을 기준으로 {@code asc}가 {@code true} 이면 asc 정렬되어 오래된 posting이 가장 앞에 있고,
+     * <p> {@code baseTimestamp}를 기준으로 {@code maxResult}가 양수이면 그 이후 posting된 message들을,
+     * 음수이면 그 이전에 posting된 message들을 리턴한다.
+     * <p> 리턴되는 feed의 수는 {@code maxResult} 의 절대값이다.
+    * <p> Posting message의 created time을 기준으로 {@code asc}가 {@code true} 이면 asc 정렬되어 오래된 posting이 가장 앞에 있고,
      * {@code false}이면 desc 정렬이 되어있기 때문에, 최신의 posting이 가장 앞에 있다.</p>
      *
      * @param userId        a id of user who get the feed
      * @param baseTimestamp a base time to retrieve
-     * @param forward       if true, feeds are after <code>baseTimestamp</code>, otherwise feeds are before <code>baseTimestamp</code>
-     * @param maxResult     a max number of feed to retrieve
+     * @param maxResult     a max number of feed to retrieve.
      * @param asc           if true, ordered by created time asc.
      * @return a list of feed
      * @throws NewsfeedException
      */
-    public List<Activity> getFeeds(long userId, long baseTimestamp, boolean forward, int maxResult, boolean asc)
+    public List<Activity> getFeeds(long userId, long baseTimestamp, int maxResult, boolean asc)
             throws NewsfeedException {
         if (baseTimestamp <= 0) {
             baseTimestamp = getLastviewTime(userId);
         }
-        if (maxResult <= 0) {
+        if (maxResult == 0) {
             maxResult = defaultMaxResult;
         }
-        log.debug("userId [{}], baseTimestamp [{}], forward [{}], maxResult [{}], asc [{}]", userId, baseTimestamp, forward,
+        log.debug("userId [{}], baseTimestamp [{}], maxResult [{}], asc [{}]", userId, baseTimestamp,
                 maxResult, asc);
         List<Long> followings = followingService.getFollowings(userId);
         if (includeMine) {
@@ -217,20 +200,21 @@ public class FeedService {
             log.info("following list {} by user{} = 0", followings.size(), userId);
             return new ArrayList<>();
         }
-        ActivityQueryExceutor.ActivityQuery query = null;
-        if (forward && asc) {
-            query = ActivityQueryExceutor.ActivityQuery.GET_BYFOLLOWING_FORWARD_ASC;
-        } else if (forward && !asc) {
-            query = ActivityQueryExceutor.ActivityQuery.GET_BYFOLLOWING_FORWARD_DESC;
-        } else if (!forward && asc) {
-            query = ActivityQueryExceutor.ActivityQuery.GET_BYFOLLOWING_BACKWARD_ASC;
+
+        boolean forward1 = maxResult >= 0;
+        ActivityQueryExceutor.ActivityQuery query;
+        if (forward1){
+            query = asc ? ActivityQueryExceutor.ActivityQuery.GET_BYFOLLOWING_FORWARD_ASC : ActivityQueryExceutor.ActivityQuery
+                    .GET_BYFOLLOWING_FORWARD_DESC;
         } else {
-            query = ActivityQueryExceutor.ActivityQuery.GET_BYFOLLOWING_BACKWARD_DESC;
+            query = asc ? ActivityQueryExceutor.ActivityQuery.GET_BYFOLLOWING_BACKWARD_ASC : ActivityQueryExceutor.ActivityQuery
+                    .GET_BYFOLLOWING_BACKWARD_DESC;
         }
-        log.debug("queryName {}, baseTimestamp {}, maxResult {}", query.name(), Utils.formatDateString(baseTimestamp), maxResult);
+        log.debug("queryName {}, baseTimestamp {}, maxResult {}", query.name(), Utils.formatDateString(baseTimestamp), Math.abs
+                (maxResult));
 
         List<Activity> feeds = activityQueryExceutor.getList(query, new Object[]{new Timestamp(baseTimestamp), followings,
-                maxResult});
+                Math.abs(maxResult)});
 
         // update lastviewTime
         if (feeds.size() > 0) {

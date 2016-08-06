@@ -58,20 +58,19 @@ public class Feeds {
     @Path("/{userId}")
     @Produces("application/json")
     public Response getFeeds(@PathParam("userId") String userId, @QueryParam("basetime") String basetime,
-                             @QueryParam("forward") String forward, @QueryParam("maxResult") int maxResult,
+                             @QueryParam("maxResult") int maxResult,
                              @QueryParam("asc") String asc) {
-        log.debug(" REST : userID [{}], basetime [{}], forward [{}], maxResult [{}], asc [{}] ",
-                userId, basetime, forward, maxResult, asc);
+        log.debug(" REST : userID [{}], basetime [{}], maxResult [{}], asc [{}] ",
+                userId, basetime, maxResult, asc);
         if (userId == null) {
             return Response.status(400).entity(Utils.convertErrorObjectToJson(400, "userId can not be null")).build();
         }
 
         try {
             long baseTime = basetime == null ? 0 : Long.valueOf(basetime);
-            boolean bForward = forward == null ? true : Boolean.parseBoolean(forward);
             boolean bAsc = asc == null ? false : Boolean.parseBoolean(asc);
-            log.debug("bforward {}, bAsc {}", bForward, bAsc);
-            List<Activity> feeds = feedService.getFeeds(Long.valueOf(userId), baseTime, bForward, maxResult, bAsc);
+            log.debug(" bAsc {}", bAsc);
+            List<Activity> feeds = feedService.getFeeds(Long.valueOf(userId), baseTime, maxResult, bAsc);
 
             ObjectMapper mapper = new ObjectMapper();
             String jsonStr = mapper.writeValueAsString(feeds);

@@ -118,13 +118,12 @@ public class NewsfeedWebClient {
         return activities;
     }
 
-    public List<Activity> getFeeds(long userId, long basetime, boolean forward, int maxResult, boolean asc)
+    public List<Activity> getFeeds(long userId, long basetime, int maxResult, boolean asc)
             throws IOException, NewsfeedException {
         String path = String.format("/feeds/%s", new Object[]{userId});
         Map<String, String> params = new HashMap<>();
         params.put("userId", String.valueOf(userId));
         params.put("basetime", String.valueOf(basetime));
-        params.put("forward", String.valueOf(forward));
         params.put("maxResult", String.valueOf(maxResult));
         params.put("asc", String.valueOf(asc));
         path = path + prepareParam(params);

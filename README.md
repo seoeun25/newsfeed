@@ -126,20 +126,22 @@ Activity
 | Method    | Path             | Description         | Parameters          | Return Object |
 | --------- | ---------------- | ------------------- | ------------------  |---------------|
 | GET       | /feeds/          | 모든 activity list   | ( basetime, maxResult, asc) | a list of Activity |
-| GET       | /feeds/{userId}  | user의 구독 list      | ( basetime, forward, maxResult, asc) | a list of Activity |
+| GET       | /feeds/{userId}  | user의 구독 list      | ( basetime, maxResult, asc) | a list of Activity |
 
 Parameters
 * userId - Newsfeed를 받는 user의 id
-* basetime - basetime(times in milliseconds) 이후에 전송된 activities를 조회. optional.
+* basetime - optional. basetime(times in milliseconds) 이후에 전송된 activities를 조회.
 이 값이 없으면 User의 lastviewTime이후를 기준.
 이것도 없으면 (아마 최초 retreive) 현재 시간 보다 24시간 전을 기준.
 0이면 현재 시간 보다 24시간 전을 기준
-* forward - true | false. true면 basetime 기준으로 이후의 feed들. false면 이전의 feed들.
-* maxResult - 리턴할 activities의 최대 갯수. default는 newsfeed configuration에서 설정.
-* asc - true | false. true이면 asc 정렬. 오래된 posting이 제일 앞에.
+* maxResult - optional. 리턴할 activities의 최대 갯수. default는 newsfeed configuration에서 설정.
+양수 값이면 basetime 이후, 음수이면 basetime 이전에 posting 된 messa
+* asc - true | false. optional. true이면 asc 정렬. 오래된 posting이 제일 앞에.
 ```
 $ curl -X GET http://localhost:19191/feeds/1
 $ curl -X GET http://localhost:19191/feeds
+$ curl -X GET http://localhost:19191/feeds/1?maxResult=-20
+$ curl -X GET http://localhost:19191/feeds/1?maxResult=20
 
 ```
 

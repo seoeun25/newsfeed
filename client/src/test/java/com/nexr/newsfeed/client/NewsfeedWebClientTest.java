@@ -213,7 +213,7 @@ public class NewsfeedWebClientTest {
             Assert.assertEquals(1, feeds.size());
 
             // retrieve from specific time
-            feeds = client.getFeeds(userId, basetime, true, 10, false);
+            feeds = client.getFeeds(userId, basetime, 10, false);
             Assert.assertEquals(2, feeds.size());
 
 
@@ -234,7 +234,7 @@ public class NewsfeedWebClientTest {
 
             feeds = client.getFeedsAll(basetime, 30, false);
             Assert.assertEquals(7, feeds.size());
-            feeds = client.getFeeds(userId, basetime, false, 10, false);
+            feeds = client.getFeeds(userId, basetime, -10, false);
             Assert.assertEquals(4, feeds.size());
             for (int i = 0; i < feeds.size(); i++) {
                 Activity activity = feeds.get(i);

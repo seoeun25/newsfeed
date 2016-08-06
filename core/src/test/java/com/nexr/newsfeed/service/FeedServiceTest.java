@@ -78,7 +78,7 @@ public class FeedServiceTest {
             followingService.follow(userId, user5.getId());
             followingService.follow(user2.getId(), user5.getId());
 
-            Activity activity1 = new Activity(1, "hello world 11");
+            Activity activity1 = new Activity(user1.getId(), "hello world 11");
             activity1.setCreatedTime(new Timestamp(Utils.parseTimeInMillis("2016-07-31 00:01:01")));
             Activity activityRe = feedService.postMessage(activity1);
             Assert.assertNotNull(activityRe);
@@ -86,16 +86,16 @@ public class FeedServiceTest {
             Assert.assertEquals(activity1.getMessage(), activity1.getMessage());
             long id1 = activityRe.getId();
             log.info("activityId1 : {}", id1);
-            Activity activity2 = new Activity(1, "hello world 12");
+            Activity activity2 = new Activity(user1.getId(), "hello world 12");
             activity2.setCreatedTime(new Timestamp(Utils.parseTimeInMillis("2016-07-31 00:10:00")));
             feedService.postMessage(activity2);
-            Activity activity3 = new Activity(2, "hello world 13");
+            Activity activity3 = new Activity(user2.getId(), "hello world 13");
             activity3.setCreatedTime(new Timestamp(Utils.parseTimeInMillis("2016-07-31 00:01:03")));
             feedService.postMessage(activity3);
-            Activity activity4 = new Activity(3, "hello world 14");
+            Activity activity4 = new Activity(user3.getId(), "hello world 14");
             activity4.setCreatedTime(new Timestamp(Utils.parseTimeInMillis("2016-07-31 00:01:02")));
             feedService.postMessage(activity4);
-            Activity activity5 = new Activity(5, "hello world 15");
+            Activity activity5 = new Activity(user5.getId(), "hello world 15");
             activity5.setCreatedTime(new Timestamp(Utils.parseTimeInMillis("2016-07-31 00:20:02")));
             feedService.postMessage(activity5);
 
@@ -137,7 +137,8 @@ public class FeedServiceTest {
             List<Long> following = followingService.getFollowings(userId);
             Assert.assertEquals(3, following.size());
 
-            List<Activity> feeds = feedService.getFeeds(userId, Utils.parseTimeInMillis("2016-07-31 00:01:01"));
+
+            List<Activity> feeds = feedService.getFeeds(userId, Utils.parseTimeInMillis("2016-07-31 00:00:00"));
             Assert.assertEquals(4, feeds.size());
             Activity previousActivity = null;
             for (int i = 0; i < feeds.size(); i++) {
@@ -172,7 +173,7 @@ public class FeedServiceTest {
             }
 
             // backward from
-            feeds = feedService.getFeeds(userId, Utils.parseTimeInMillis("2016-07-31 00:20:00"), false);
+            feeds = feedService.getFeeds(userId, Utils.parseTimeInMillis("2016-07-31 00:20:00"), -20);
             Assert.assertEquals(3, feeds.size());
             previousActivity = null;
             for (int i = 0; i < feeds.size(); i++) {
@@ -186,7 +187,7 @@ public class FeedServiceTest {
             }
 
             // maxResult = 1
-            feeds = feedService.getFeeds(userId, Utils.parseTimeInMillis("2016-07-31 00:20:00"), false, 1, false);
+            feeds = feedService.getFeeds(userId, Utils.parseTimeInMillis("2016-07-31 00:20:00"), -1, false);
             Assert.assertEquals(1, feeds.size());
             for (int i = 0; i < feeds.size(); i++) {
                 Activity activity = feeds.get(i);
