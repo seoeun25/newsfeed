@@ -1,8 +1,8 @@
-#### newsfeed
+# newsfeed
 
-# Intro
+## Intro
 
-Newsfeed 서버는 사용자가 news를 포스팅하고, 다른 사용자와 친구를 맺어 친구들이 올린 news 를feed 받는 서비스이다.
+Newsfeed 서버는 사용자가 news를 포스팅하고, 다른 사용자와 친구를 맺어 친구들이 올린 news를 feed 받는 서비스이다.
 
 다음과 같은 기능을 제공한다.
 
@@ -11,32 +11,60 @@ Newsfeed 서버는 사용자가 news를 포스팅하고, 다른 사용자와 친
 * post news
 * feed news
 
-# How to build
+## How to build
 
 ```
 $ mvn clean package assembly:single
-$ ls -l newsfeed/target/newsfeed-core-{version}-distro.tar.gz
+$ ls -l core/target/newsfeed-core-${verson}-distro.tar.gz
 ```
 
-# How to install
+## How to install
 
-Untar the disto tar such as schema-registry-repo-{version}-distro.tar.gz
+Untar the disto tar such as newsfeed-core-{version}-distro.tar.gz
 
-REPO_HOME will be repo-0.9-SNAPSHOT
+NEWSFEED_HOME will be newsfeed-core-0.9-SNAPSHOT (or Symlink as newsfeed)
 ```
-$ tar xzvf schema-registry-repo-0.9-SNAPSHOT-distro.tar.gz
-$ cd repo-0.9-SNAPSHOT
-$ bin/repo.sh start (|stop)
+$ tar xzvf newsfeed-core-0.9-SNAPSHOT-distro.tar.gz
+$ ln -s newsfeed-core-0.9-SNAPSHOT newsfeed
+$ cd newsfeed
+$ bin/newsfeed.sh start (|stop)
 ```
 
-# Setup the config
+## Setup the config
 
 * bin/env.sh 파일을 수정
 * conf/newsfeed.conf 파일을 수정
 
-# HTTP EndPoint
+### bin/env.sh
+```
+$ vi bin/env.sh
 
-## users
+NEWSFEED_HOME을 환경에 맞게 설정.
+## NEWSFEED_HOME
+NEWSFEED_HOME=/Users/seoeun/libs/newsfeed
+```
+
+### conf/newsfeed.conf
+
+사용할 DB에서 database(newsfeed) 를 생성. mysql이라면,
+```
+mysql> create database newsfeed;
+```
+
+```
+$ vi conf/newsfeed.conf
+JDBC 정보를 환경에 맞게 설정
+newsfeed.jdbc.driver=com.mysql.jdbc.Driver
+newsfeed.jdbc.url=jdbc:mysql://localhost/newsfeed?useUnicode=true&characterEncoding=UTF-8
+newsfeed.jdbc.username=sa
+newsfeed.jdbc.password=sa
+```
+
+## HTTP EndPoint
+
+baseURL = http://localhost:19191
+
+### users
 
 | Method    | Path             | Description         | Parameters          | Return Object |
 | --------- | ---------------- | ------------------- | ------------------  |---------------|
@@ -45,7 +73,6 @@ $ bin/repo.sh start (|stop)
 | POST      | /users           | 새로운 user 생성       | name, email         | User          |
 | PUT       | /users/{id}      | user의 lastviewTime 수정 | lastviewTime     | User          |
 
-
 User
 * id - the id
 * email - eamil
@@ -53,25 +80,23 @@ User
 * lastViewTime - 마지막 본 newsfeed의 timestamp. milliseconds.
 * createTime - user 생성 시간.  milliseconds.
 
-## followings
+### followings
 
 | Method    | Path             | Description         | Parameters          | Return Object |
 | --------- | ---------------- | ------------------- | ------------------  |---------------|
-| GET       | /followings/{userId} | user가 following하는 user들 조회  |      | a list of Friend |
+| GET       | /followings/{userId} | user가 following하는 user들 조회  |      | a list of userId to follow |
 | POST      | /followings          | user가 다른 사용자를 follow        | userId, followingId | Friend |
-
 
 Friend
 * userId- the id of user
 * followingId  - the userId of following
 * createTime - Friend 생성 시간.  milliseconds.
 
-## activities
+### activities
 
 | Method    | Path             | Description         | Parameters          | Return Object |
 | --------- | ---------------- | ------------------- | ------------------  |---------------|
 | POST      | /activities      | post message        | userId, message     | Activity      |
-
 
 Activity
 * id - the activity id
@@ -79,8 +104,29 @@ Activity
 * message  - posting 내용
 * createTime - Activity 생성 시간.  milliseconds.
 
-## feeds
+### feeds
 
 | Method    | Path             | Description         | Parameters          | Return Object |
 | --------- | ---------------- | ------------------- | ------------------  |---------------|
-| GET       | /feeds/{userId}  | user의 구독 list      | userId              | a list of Activity |
+| GET       | /feeds/{userId}  | user의 구독 list      | ( basetime, forward, maxResult, asc) | a list of Activity |
+
+Parameters
+* userId - Newsfeed를 받는 user의 id
+* basetime - basetime(times in milliseconds) 이후에 전송된 activities를 조회. optional.
+이 값이 없으면 User의 lastviewTime이후를 기준.
+이것도 없으면 (아마 최초 retreive) 현재 시간 보다 24시간 전을 기준.
+* forward - true | false. true면 basetime 기준으로 이후의 feed들. false면 이전의 feed들.
+* maxResult - 리턴할 activities의 최대 갯수. default는 newsfeed configuration에서 설정.
+* asc - true | false. true이면 asc 정렬. 오래된 posting이 제일 앞에.
+
+### errorsObject
+
+Http Request를 보냈을 때 error 가 발생하면 errorObject를 json형식으로 리턴한다.
+
+errorObject
+* status - status
+* message - message
+
+
+
+

@@ -1,0 +1,62 @@
+<assembly>
+    <id>distro</id>
+    <formats>
+        <format>dir</format>
+        <format>tar.gz</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <!--
+    <files>
+        <file>
+            <source>${project.build.directory}/${artifact.artifactId}-${artifact.version}.jar</source>
+            <outputDirectory>repo-${project.version}/lib</outputDirectory>
+        </file>
+    </files>
+    -->
+    <fileSets>
+        <!-- Distro files, readme, licenses, etc -->
+        <fileSet>
+            <directory>${basedir}/bin</directory>
+            <outputDirectory>newsfeed-${project.version}/bin</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+            <fileMode>0755</fileMode>
+        </fileSet>
+
+        <fileSet>
+            <directory>${basedir}/conf</directory>
+            <outputDirectory>newsfeed-${project.version}/conf</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>${basedir}/../core/target/</directory>
+            <outputDirectory>newsfeed-${project.version}/lib</outputDirectory>
+            <includes>
+                <include>newsfeed-core-${project.version}.jar</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>${basedir}/../client/target/</directory>
+            <outputDirectory>newsfeed-${project.version}/lib</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+            <fileMode>0644</fileMode>
+        </fileSet>
+    </fileSets>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>newsfeed-${project.version}/lib</outputDirectory>
+            <unpack>false</unpack>
+            <scope>compile</scope>
+        </dependencySet>
+    </dependencySets>
+
+</assembly>
