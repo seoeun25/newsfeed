@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.text.ParseException;
+
 public class UtilsTest {
 
     @Test

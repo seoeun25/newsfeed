@@ -27,7 +27,11 @@ import java.util.Date;
         @NamedQuery(name = "GET_BYFOLLOWING_BACKWARD_ASC", query = "select a.id, a.userId, a.message, a.createdTime " +
                 "from Activity a where a.createdTime <= :createdTime and a.userId in :followings order by a.createdTime asc"),
         @NamedQuery(name = "GET_BYFOLLOWING_BACKWARD_DESC", query = "select a.id, a.userId, a.message, a.createdTime " +
-                "from Activity a where a.createdTime <= :createdTime and a.userId in :followings order by a.createdTime desc")
+                "from Activity a where a.createdTime <= :createdTime and a.userId in :followings order by a.createdTime desc"),
+        @NamedQuery(name = "GET_ALL_ACTIVITIES_ASC", query = "select a.id, a.userId, a.message, a.createdTime " +
+                "from Activity a where a.createdTime >= :createdTime order by a.createdTime asc"),
+        @NamedQuery(name = "GET_ALL_ACTIVITIES_DESC", query = "select a.id, a.userId, a.message, a.createdTime " +
+                "from Activity a where a.createdTime >= :createdTime order by a.createdTime desc")
 
 })
 @Table(name = "activity")

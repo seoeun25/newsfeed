@@ -40,6 +40,13 @@ public class ActivityQueryExceutor extends QueryExecutor<Activity, ActivityQuery
                     query.setMaxResults((Integer) parameters[2]);
                 }
                 break;
+            case GET_ALL_ACTIVITIES_ASC:
+            case GET_ALL_ACTIVITIES_DESC:
+                query.setParameter("createdTime", parameters[0]);
+                if (parameters.length >= 2) {
+                    query.setMaxResults((Integer) parameters[1]);
+                }
+                break;
             default:
                 throw new NewsfeedException("QueryExecutor cannot set parameters for " + namedQuery.name());
         }
@@ -102,6 +109,8 @@ public class ActivityQueryExceutor extends QueryExecutor<Activity, ActivityQuery
             case GET_BYFOLLOWING_FORWARD_DESC:
             case GET_BYFOLLOWING_BACKWARD_ASC:
             case GET_BYFOLLOWING_BACKWARD_DESC:
+            case GET_ALL_ACTIVITIES_ASC:
+            case GET_ALL_ACTIVITIES_DESC:
                 bean = new Activity();
                 arr = (Object[]) ret;
                 bean.setId((Long) arr[0]);
@@ -119,7 +128,9 @@ public class ActivityQueryExceutor extends QueryExecutor<Activity, ActivityQuery
         GET_BYFOLLOWING_FORWARD_ASC,
         GET_BYFOLLOWING_FORWARD_DESC,
         GET_BYFOLLOWING_BACKWARD_ASC,
-        GET_BYFOLLOWING_BACKWARD_DESC
+        GET_BYFOLLOWING_BACKWARD_DESC,
+        GET_ALL_ACTIVITIES_ASC,
+        GET_ALL_ACTIVITIES_DESC
     }
 
 

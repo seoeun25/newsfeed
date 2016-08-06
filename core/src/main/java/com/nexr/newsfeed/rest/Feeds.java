@@ -34,6 +34,27 @@ public class Feeds {
     }
 
     @GET
+    @Path("/")
+    @Produces("application/json")
+    public Response getFeedsAll(@QueryParam("basetime") String basetime, @QueryParam("maxResult") int maxResult,
+                             @QueryParam("asc") String asc) {
+        log.debug(" REST : basetime [{}], maxResult [{}], asc [{}] ", basetime, maxResult, asc);
+
+        try {
+            long baseTime = basetime == null ? 0 : Long.valueOf(basetime);
+            boolean bAsc = asc == null ? false : Boolean.parseBoolean(asc);
+            log.info("bAsc {}", bAsc );
+            List<Activity> feeds = feedService.getFeedsAll(baseTime, maxResult, bAsc);
+
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonStr = mapper.writeValueAsString(feeds);
+            return Response.status(200).entity(jsonStr).build();
+        } catch (Exception e) {
+            return Response.status(500).entity(Utils.convertErrorObjectToJson(500, e.getMessage())).build();
+        }
+    }
+
+    @GET
     @Path("/{userId}")
     @Produces("application/json")
     public Response getFeeds(@PathParam("userId") String userId, @QueryParam("basetime") String basetime,
@@ -49,7 +70,7 @@ public class Feeds {
             long baseTime = basetime == null ? 0 : Long.valueOf(basetime);
             boolean bForward = forward == null ? true : Boolean.parseBoolean(forward);
             boolean bAsc = asc == null ? false : Boolean.parseBoolean(asc);
-            log.debug("bforward {}, bAsc {}", bForward, bAsc );
+            log.debug("bforward {}, bAsc {}", bForward, bAsc);
             List<Activity> feeds = feedService.getFeeds(Long.valueOf(userId), baseTime, bForward, maxResult, bAsc);
 
             ObjectMapper mapper = new ObjectMapper();

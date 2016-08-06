@@ -188,7 +188,10 @@ public class NewsfeedWebClientTest {
             List<Long> followings = client.getFollowing(userId);
             Assert.assertEquals(3, followings.size());
 
-            List<Activity> feeds = client.getFeeds(userId); // desc. the latest first.
+            List<Activity> feeds = client.getFeedsAll(0, 10, true);
+            Assert.assertTrue(feeds.size() >= 6);
+
+            feeds = client.getFeeds(userId); // desc. the latest first.
             Assert.assertEquals(5, feeds.size());
             Activity previousActivity = null;
             for (int i = 0; i < feeds.size(); i++) {
@@ -213,6 +216,8 @@ public class NewsfeedWebClientTest {
             feeds = client.getFeeds(userId, basetime, true, 10, false);
             Assert.assertEquals(2, feeds.size());
 
+
+
             client.postMessage(user4.getId(), "message 7 - by 4");
             client.postMessage(user3.getId(), "message 8 - by 3");
             client.postMessage(user1.getId(), "message 9 - by 1");
@@ -227,6 +232,8 @@ public class NewsfeedWebClientTest {
             long lastviewTime = client.getUser(userId).getLastViewTime().getTime();
             Assert.assertTrue(lastviewTime >= basetime);
 
+            feeds = client.getFeedsAll(basetime, 30, false);
+            Assert.assertEquals(7, feeds.size());
             feeds = client.getFeeds(userId, basetime, false, 10, false);
             Assert.assertEquals(4, feeds.size());
             for (int i = 0; i < feeds.size(); i++) {

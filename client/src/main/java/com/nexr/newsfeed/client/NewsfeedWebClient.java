@@ -132,6 +132,18 @@ public class NewsfeedWebClient {
         return activities;
     }
 
+    public List<Activity> getFeedsAll(long basetime, int maxResult, boolean asc)
+            throws IOException, NewsfeedException {
+        String path = String.format("/feeds");
+        Map<String, String> params = new HashMap<>();
+        params.put("basetime", String.valueOf(basetime));
+        params.put("maxResult", String.valueOf(maxResult));
+        params.put("asc", String.valueOf(asc));
+        path = path + prepareParam(params);
+        List<Activity> activities = httpRequest(path, "GET", null, new HashMap<String, String>(), ACTIVITY_LIST_TYPE);
+        return activities;
+    }
+
     public String prepareParam(Map<String,String> parameters) throws UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder();
         if (parameters.size() > 0) {

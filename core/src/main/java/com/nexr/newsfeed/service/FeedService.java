@@ -73,6 +73,43 @@ public class FeedService {
     }
 
     /**
+     * <p> {@code baseTimestamp}를 이후에 posting된 message들을 리턴한다.
+     * <p> 리턴되는 feed의 수는 {@code maxResult} 이다.
+     * <p> Posting message의 created time을 기준으로 {@code asc}가 {@code true} 이면 asc 정렬되어 오래된 posting이 가장 앞에 있고,
+     * {@code false}이면 desc 정렬이 되어있기 때문에, 최신의 posting이 가장 앞에 있다.</p>
+     *
+     * @param baseTimestamp a base time to retrieve
+     * @param maxResult     a max number of feed to retrieve
+     * @param asc           if true, ordered by created time asc.
+     * @return a list of feed
+     * @throws NewsfeedException
+     */
+    public List<Activity> getFeedsAll(long baseTimestamp, int maxResult, boolean asc)
+            throws NewsfeedException {
+        if (baseTimestamp <= 0) {
+            baseTimestamp = Utils.add(System.currentTimeMillis(), -1);
+        }
+        if (maxResult <= 0) {
+            maxResult = defaultMaxResult;
+        }
+        log.info("baseTimestamp [{}], maxResult [{}], asc [{}]", baseTimestamp, maxResult, asc);
+
+        ActivityQueryExceutor.ActivityQuery query = null;
+        if (asc) {
+            query = ActivityQueryExceutor.ActivityQuery.GET_ALL_ACTIVITIES_ASC;
+        } else {
+            query = ActivityQueryExceutor.ActivityQuery.GET_ALL_ACTIVITIES_DESC;
+        }
+        log.info("queryName {}, baseTimestamp {}, maxResult {}", query.name(), Utils.formatDateString(baseTimestamp), maxResult);
+
+        List<Activity> feeds = activityQueryExceutor.getList(query, new Object[]{new Timestamp(baseTimestamp), maxResult});
+
+        return feeds;
+    }
+
+
+
+    /**
      * <code>userId</code> 에 해당하는 user가 following하는 user들이 post한 message들을 리턴한다.
      * <p> User의 lastviewTime, 즉 user가 마지막 본 feed의 timestamp가 basetime이 되어 이 시간 이후에
      * posting 된 message들을 리턴한다. 만약 user가 처음으로 feed를 받는 경우, {@code lastviewTime}이 설정되지 않았기 때문에

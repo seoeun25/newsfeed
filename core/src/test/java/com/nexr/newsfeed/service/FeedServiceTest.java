@@ -102,7 +102,7 @@ public class FeedServiceTest {
 
             User user6 = userService.createUser("hollo@email.com", "hello");
             log.info("user6 : {}", user6);
-            log.info("Created data for testing");
+            log.info("Created data for testing!!");
 
         } catch (NewsfeedException e) {
             log.warn("Fail to create initial data", e);
@@ -112,6 +112,25 @@ public class FeedServiceTest {
 
     @Test
     public void testGetFeeds() throws ParseException {
+
+        try {
+            // Get All feeds
+            List<Activity> feeds = feedService.getFeedsAll(0, 10, true);
+            Assert.assertEquals(0, feeds.size());
+
+            feeds = feedService.getFeedsAll(Utils.parseTimeInMillis("2016-07-31 00:00:00"), 10, true);
+            Assert.assertEquals(5, feeds.size());
+
+            feeds = feedService.getFeedsAll(Utils.parseTimeInMillis("2016-07-31 00:00:00"), 2, false);
+            Assert.assertEquals(2, feeds.size());
+            for (int i = 0; i<feeds.size(); i++) {
+                log.info("initdata : " + feeds.get(i).toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail("Fail to get all feeds");
+        }
+
         try {
             Assert.assertTrue(userId >= 0);
 
