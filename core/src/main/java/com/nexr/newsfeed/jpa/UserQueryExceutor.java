@@ -2,6 +2,8 @@ package com.nexr.newsfeed.jpa;
 
 import com.nexr.newsfeed.NewsfeedException;
 import com.nexr.newsfeed.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
@@ -11,13 +13,15 @@ import java.util.Date;
 import java.util.List;
 
 public class UserQueryExceutor extends QueryExecutor<User, UserQueryExceutor.UserQuery> {
+    private static Logger log = LoggerFactory.getLogger(UserQueryExceutor.class);
 
     public User get(UserQuery namedQuery, Object... parameters) throws NewsfeedException {
         EntityManager em = JPAService.getEntityManager();
         Query query = getSelectQuery(namedQuery, em, parameters);
         Object ret = JPAService.executeGet(namedQuery.name(), query, em);
         if (ret == null) {
-            throw new NewsfeedException("User Not Found: " + query.toString());
+            log.debug("query [{}]", query.toString());
+            throw new NewsfeedException("User Not Found");
         }
         User bean = constructBean(namedQuery, ret, parameters);
         return bean;

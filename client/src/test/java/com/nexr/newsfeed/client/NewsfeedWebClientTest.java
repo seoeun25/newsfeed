@@ -117,12 +117,17 @@ public class NewsfeedWebClientTest {
     @Test
     public void testFollowing() {
         try {
-            long userId = 30;
-            Friend friend1 = client.follow(userId, 1);
+            long userId = client.createUser("a@email.com", "a").getId();
+            User user1 = client.createUser("b@email.com", "b");
+            User user2 = client.createUser("c@email.com", "c");
+            User user3 = client.createUser("d@email.com", "d");
+
+
+            Friend friend1 = client.follow(userId, user1.getId());
             Assert.assertNotNull(friend1);
-            Friend friend2 = client.follow(userId, 2);
+            Friend friend2 = client.follow(userId, user2.getId());
             Assert.assertNotNull(friend2);
-            Friend friend3 = client.follow(userId, 3);
+            Friend friend3 = client.follow(userId, user3.getId());
             Assert.assertNotNull(friend3);
 
             List<Long> ids = client.getFollowing(userId);
@@ -139,7 +144,7 @@ public class NewsfeedWebClientTest {
     @Test
     public void testActivities() {
         try {
-            long userId = 30;
+            long userId = client.createUser("azrael30@email.com", "azrael40").getId();
             Activity activity = client.postMessage(userId, "Hello newsfeed 1");
             Assert.assertEquals(userId, activity.getUserId());
             Assert.assertEquals("Hello newsfeed 1", activity.getMessage());
@@ -152,35 +157,41 @@ public class NewsfeedWebClientTest {
     @Test
     public void testFeed() throws InterruptedException {
         try {
-            long userId = -1;
             User user = client.createUser("azrael40@email.com", "azrael40");
-            userId = user.getId();
+            long userId = user.getId();
             Assert.assertNull(user.getLastViewTime());
             log.info("userId :  {}", userId);
-            client.follow(userId, 1);
-            client.follow(userId, 2);
-            client.follow(userId, 3);
+            User user1 = client.createUser("x@email.com", "x");
+            User user2 = client.createUser("y@email.com", "y");
+            User user3 = client.createUser("z@email.com", "z");
+            User user4 = client.createUser("xxx@email.com", "xxx");
+            User user5 = client.createUser("yyy@email.com", "yyy");
+            User user6 = client.createUser("zzz@email.com", "zzz");
 
-            client.postMessage(1, "message 1 - by 1");
+            client.follow(userId, user1.getId());
+            client.follow(userId, user2.getId());
+            client.follow(userId, user3.getId());
+
+            client.postMessage(user1.getId(), "message 1 - by 1");
             Thread.sleep(100);
-            client.postMessage(2, "message 2 - by 2");
+            client.postMessage(user2.getId(), "message 2 - by 2");
             Thread.sleep(100);
-            client.postMessage(5, "message 3 - by 5");
+            client.postMessage(user3.getId(), "message 3 - by 5");
             Thread.sleep(100);
-            client.postMessage(6, "message 4 - by 6");
+            client.postMessage(user6.getId(), "message 4 - by 6");
             long basetime = System.currentTimeMillis();
             Thread.sleep(100);
-            client.postMessage(3, "message 5 - by 3");
+            client.postMessage(user3.getId(), "message 5 - by 3");
             Thread.sleep(100);
-            client.postMessage(2, "message 6 - by 2");
+            client.postMessage(user2.getId(), "message 6 - by 2");
 
             List<Long> followings = client.getFollowing(userId);
             Assert.assertEquals(3, followings.size());
 
             List<Activity> feeds = client.getFeeds(userId); // desc. the latest first.
-            Assert.assertEquals(4, feeds.size());
+            Assert.assertEquals(5, feeds.size());
             Activity previousActivity = null;
-            for (int i=0; i< feeds.size(); i++) {
+            for (int i = 0; i < feeds.size(); i++) {
                 Activity activity = feeds.get(i);
                 log.info(activity.toString());
                 if (previousActivity != null) {
@@ -202,22 +213,23 @@ public class NewsfeedWebClientTest {
             feeds = client.getFeeds(userId, basetime, true, 10, false);
             Assert.assertEquals(2, feeds.size());
 
-            client.postMessage(4, "message 7 - by 4");
-            client.postMessage(3, "message 8 - by 3");
-            client.postMessage(1, "message 9 - by 1");
+            client.postMessage(user4.getId(), "message 7 - by 4");
+            client.postMessage(user3.getId(), "message 8 - by 3");
+            client.postMessage(user1.getId(), "message 9 - by 1");
             feeds = client.getFeeds(userId);
             Assert.assertEquals(3, feeds.size());
 
-            client.follow(userId, 6);
-            client.postMessage(6, "message 10 - by 6");
+            client.follow(userId, user6.getId());
+            client.postMessage(user6.getId(), "message 10 - by 6");
+            client.postMessage(user5.getId(), "message 11 - by 5");
             feeds = client.getFeeds(userId);
             Assert.assertEquals(2, feeds.size());
             long lastviewTime = client.getUser(userId).getLastViewTime().getTime();
             Assert.assertTrue(lastviewTime >= basetime);
 
             feeds = client.getFeeds(userId, basetime, false, 10, false);
-            Assert.assertEquals(3, feeds.size());
-            for (int i =0; i<feeds.size(); i++) {
+            Assert.assertEquals(4, feeds.size());
+            for (int i = 0; i < feeds.size(); i++) {
                 Activity activity = feeds.get(i);
                 log.info("backward : {}", activity);
                 Assert.assertTrue(activity.getCreatedTime().getTime() <= basetime);

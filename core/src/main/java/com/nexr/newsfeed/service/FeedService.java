@@ -61,6 +61,7 @@ public class FeedService {
     }
 
     public Activity postMessage(Activity activity) throws NewsfeedException {
+        userService.getUser(activity.getUserId()); // TODO join with user table
         activityQueryExceutor.insertActivity(activity);
         return activity;
     }

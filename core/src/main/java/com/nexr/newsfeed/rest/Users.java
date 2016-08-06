@@ -50,7 +50,7 @@ public class Users {
             return Response.status(200).entity(user.toJson()).build();
         } catch (Exception e) {
             return Response.status(500).entity(Utils.convertErrorObjectToJson(500,
-                    "Fail to create user: name [" + name + "], " + "email [" + email + "]")).build();
+                    "Fail to create user: name [" + name + "], " + "email [" + email + "] : " + e.getMessage())).build();
         }
 
     }
@@ -68,7 +68,7 @@ public class Users {
             return Response.status(200).entity(userUpdated.toJson()).build();
         } catch (Exception e) {
             return Response.status(500).entity(Utils.convertErrorObjectToJson(500,
-                    "Fail to update the lastviewTime, user=" + lastviewTime)).build();
+                    "Fail to update the lastviewTime, user=" + lastviewTime) + " : " + e.getMessage()).build();
         }
     }
 

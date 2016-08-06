@@ -3,7 +3,9 @@ package com.nexr.newsfeed.util;
 import com.google.inject.Inject;
 import com.nexr.newsfeed.NewsfeedException;
 import com.nexr.newsfeed.entity.Friend;
+import com.nexr.newsfeed.entity.User;
 import com.nexr.newsfeed.jpa.FriendQueryExceutor;
+import com.nexr.newsfeed.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,10 +22,12 @@ public class LocalFollowCache implements FollowCache {
 
     private Map<Long, Set<Long>> followingCache = new ConcurrentHashMap<>();
     private FriendQueryExceutor friendQueryExceutor;
+    private UserService userService;
 
     @Inject
-    public LocalFollowCache(FriendQueryExceutor friendQueryExceutor) {
+    public LocalFollowCache(FriendQueryExceutor friendQueryExceutor, UserService userService) {
         this.friendQueryExceutor = friendQueryExceutor;
+        this.userService = userService;
         load();
     }
 
@@ -53,6 +57,13 @@ public class LocalFollowCache implements FollowCache {
 
     @Override
     public Friend follow(long userId, long followingId) throws NewsfeedException {
+        try {
+            // TODO join with user table
+            User user1 = userService.getUser(userId);
+            User user2 = userService.getUser(followingId);
+        } catch (NewsfeedException e) {
+            throw e;
+        }
         try {
             Friend friend = friendQueryExceutor.get(FriendQueryExceutor.FriendQuery.GET_FOLLOWING,
                     new Object[]{userId, followingId});

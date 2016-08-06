@@ -48,7 +48,7 @@ public class Followings {
             return Response.status(200).entity(friend.toJson()).build();
         } catch (Exception e) {
             return Response.status(500).entity(Utils.convertErrorObjectToJson(500,
-                    "Fail to follow : userId [" + userId + "], " + "followingId [" + followingId + "]")).build();
+                    "Fail to follow : userId [" + userId + "], " + "followingId [" + followingId + "] : " + e.getMessage())).build();
         }
 
     }

@@ -73,6 +73,16 @@ baseURL = http://localhost:19191
 | POST      | /users           | 새로운 user 생성       | name, email         | User          |
 | PUT       | /users/{id}      | user의 lastviewTime 수정 | lastviewTime     | User          |
 
+```
+$ curl -X POST http://localhost:19191/users -d 'email=seoeun25@gmail.com&name=seoeun'
+
+$ curl -X GET http://localhost:19191/users
+
+$ curl -X GET http://localhost:19191/users/1
+
+$ curl -X PUT http://localhost:19191/users/1 -d 'lastviewTime=1470466137000'
+```
+
 User
 * id - the id
 * email - eamil
@@ -87,6 +97,10 @@ User
 | GET       | /followings/{userId} | user가 following하는 user들 조회  |      | a list of userId to follow |
 | POST      | /followings          | user가 다른 사용자를 follow        | userId, followingId | Friend |
 
+```
+$ curl -X POST http://localhost:19191/followings -d 'userId=1&followingId=2'
+$ curl -X GET http://localhost:19191/followings/1
+```
 Friend
 * userId- the id of user
 * followingId  - the userId of following
@@ -98,6 +112,9 @@ Friend
 | --------- | ---------------- | ------------------- | ------------------  |---------------|
 | POST      | /activities      | post message        | userId, message     | Activity      |
 
+```
+$ curl -X POST http://localhost:19191/activities -d 'userId=4&message=this is by 4'
+```
 Activity
 * id - the activity id
 * userId- the id of user
@@ -118,6 +135,9 @@ Parameters
 * forward - true | false. true면 basetime 기준으로 이후의 feed들. false면 이전의 feed들.
 * maxResult - 리턴할 activities의 최대 갯수. default는 newsfeed configuration에서 설정.
 * asc - true | false. true이면 asc 정렬. 오래된 posting이 제일 앞에.
+```
+curl -X GET http://localhost:19191/feeds/1
+```
 
 ### errorsObject
 

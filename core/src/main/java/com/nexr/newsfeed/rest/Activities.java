@@ -43,7 +43,7 @@ public class Activities {
             return Response.status(200).entity(activity.toJson()).build();
         } catch (Exception e) {
             return Response.status(500).entity(Utils.convertErrorObjectToJson(500,
-                    "Fail to postMessage : userId [" + userId + "], " + "message [" + message + "]")).build();
+                    "Fail to postMessage : userId [" + userId + "], " + "message [" + message + "] : " + e.getMessage())).build();
         }
 
     }

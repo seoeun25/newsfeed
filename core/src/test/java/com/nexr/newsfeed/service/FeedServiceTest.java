@@ -61,16 +61,22 @@ public class FeedServiceTest {
 
     public static void initData() throws ParseException {
         try {
-            followingService.follow(110, 2);
             User user = userService.createUser("abc@email.com", "hello");
             log.info("user : " + user.toString());
             userId = user.getId();
 
-            followingService.follow(1, 2);
-            followingService.follow(userId, 1);
-            followingService.follow(userId, 3);
-            followingService.follow(userId, 5);
-            followingService.follow(2, 4);
+            User user1 = userService.createUser("a@email.com", "a");
+            User user2 = userService.createUser("b@email.com", "b");
+            User user3 = userService.createUser("c@email.com", "c");
+            User user4 = userService.createUser("d@email.com", "d");
+            User user5 = userService.createUser("e@email.com", "e");
+
+
+            followingService.follow(user1.getId(), user3.getId());
+            followingService.follow(userId, user1.getId());
+            followingService.follow(userId, user3.getId());
+            followingService.follow(userId, user5.getId());
+            followingService.follow(user2.getId(), user5.getId());
 
             Activity activity1 = new Activity(1, "hello world 11");
             activity1.setCreatedTime(new Timestamp(Utils.parseTimeInMillis("2016-07-31 00:01:01")));
@@ -94,8 +100,8 @@ public class FeedServiceTest {
             feedService.postMessage(activity5);
 
 
-            User user2 = userService.createUser("hollo@email.com", "hello");
-            log.info("user2 : {}", user2);
+            User user6 = userService.createUser("hollo@email.com", "hello");
+            log.info("user6 : {}", user6);
             log.info("Created data for testing");
 
         } catch (NewsfeedException e) {
