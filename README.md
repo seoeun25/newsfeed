@@ -39,7 +39,7 @@ $ bin/newsfeed.sh start (|stop)
 ```
 $ vi bin/env.sh
 
-NEWSFEED_HOME을 환경에 맞게 설정.
+## NEWSFEED_HOME을 환경에 맞게 설정.
 ## NEWSFEED_HOME
 NEWSFEED_HOME=/Users/seoeun/libs/newsfeed
 ```
@@ -53,7 +53,7 @@ mysql> create database newsfeed;
 
 ```
 $ vi conf/newsfeed.conf
-JDBC 정보를 환경에 맞게 설정
+## JDBC 정보를 환경에 맞게 설정
 newsfeed.jdbc.driver=com.mysql.jdbc.Driver
 newsfeed.jdbc.url=jdbc:mysql://localhost/newsfeed?useUnicode=true&characterEncoding=UTF-8
 newsfeed.jdbc.username=sa
@@ -75,11 +75,8 @@ baseURL = http://localhost:19191
 
 ```
 $ curl -X POST http://localhost:19191/users -d 'email=seoeun25@gmail.com&name=seoeun'
-
 $ curl -X GET http://localhost:19191/users
-
 $ curl -X GET http://localhost:19191/users/1
-
 $ curl -X PUT http://localhost:19191/users/1 -d 'lastviewTime=1470466137000'
 ```
 
@@ -115,6 +112,7 @@ Friend
 ```
 $ curl -X POST http://localhost:19191/activities -d 'userId=4&message=this is by 4'
 ```
+
 Activity
 * id - the activity id
 * userId- the id of user
@@ -130,19 +128,21 @@ Activity
 
 Parameters
 * userId - Newsfeed를 받는 user의 id
-* basetime - optional. basetime(times in milliseconds) 이후에 전송된 activities를 조회.
-이 값이 없으면 User의 lastviewTime이후를 기준.
-이것도 없으면 (아마 최초 retreive) 현재 시간 보다 24시간 전을 기준.
-0이면 현재 시간 보다 24시간 전을 기준
-* maxResult - optional. 리턴할 activities의 최대 갯수. default는 newsfeed configuration에서 설정.
-양수 값이면 basetime 이후, 음수이면 basetime 이전에 posting 된 messa
-* asc - true | false. optional. true이면 asc 정렬. 오래된 posting이 제일 앞에.
+* basetime - (optional) basetime(times in milliseconds) 이후에 전송된 activities를 조회.
+default로는 User의 lastviewTime 을 사용한다. 만약 lastviewTime이 null(아마 최초의 getFeeds)이거나
+basetime이 0 이면 현재 시간에서 24시간 전을 basetime으로 한다.
+* maxResult - (optional) 리턴할 activities의 최대 갯수로 이 값의 절대 값을 사용한다.
+양수 값이면 basetime 이후, 음수이면 basetime 이전에 posting 된 message를 리턴한다.
+default는 newsfeed configuration(newsfeed.conf)에서 설정.
+* asc - (optional) true | false. message의 createdTime을 기준으로 어떻게 정렬할지를 결정.
+default 값은 false로 최신 feed가 맨 앞에 오도록 한다.
+
 ```
 $ curl -X GET http://localhost:19191/feeds/1
 $ curl -X GET http://localhost:19191/feeds
 $ curl -X GET http://localhost:19191/feeds/1?maxResult=-20
 $ curl -X GET http://localhost:19191/feeds/1?maxResult=20
-
+$ curl -X GET "http://localhost:19191/feeds/1?basetime=1470560355000&maxResult=-3"
 ```
 
 ### errorsObject
@@ -152,7 +152,4 @@ Http Request를 보냈을 때 error 가 발생하면 errorObject를 json형식�
 errorObject
 * status - status
 * message - message
-
-
-
 
