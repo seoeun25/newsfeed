@@ -22,10 +22,10 @@ $ ls -l core/target/newsfeed-core-${verson}-distro.tar.gz
 
 Untar the disto tar such as newsfeed-core-{version}-distro.tar.gz
 
-NEWSFEED_HOME will be newsfeed-core-0.9 (or Symlink as newsfeed)
+NEWSFEED_HOME will be newsfeed-core-1.0-SNAPSHOT (or Symlink as newsfeed)
 ```
-$ tar xzvf newsfeed-core-0.9-distro.tar.gz
-$ ln -s newsfeed-core-0.9 newsfeed
+$ tar xzvf newsfeed-core-1.0-SNAPSHOT-distro.tar.gz
+$ ln -s newsfeed-core-1.0-SNAPSHOT newsfeed
 $ cd newsfeed
 $ bin/newsfeed.sh start (|stop)
 ```
