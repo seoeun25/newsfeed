@@ -16,6 +16,7 @@ import com.nexr.newsfeed.jpa.JPAService;
 import com.nexr.newsfeed.jpa.UserQueryExceutor;
 import com.nexr.newsfeed.service.FeedService;
 import com.nexr.newsfeed.service.FollowingService;
+import com.nexr.newsfeed.service.MonitoringService;
 import com.nexr.newsfeed.service.UserService;
 import com.nexr.newsfeed.util.FollowCache;
 import com.nexr.newsfeed.util.LocalFollowCache;
@@ -88,6 +89,7 @@ public class NewsfeedServer extends AbstractModule {
         bind(UserService.class).in(Singleton.class);
         bind(FollowingService.class).in(Singleton.class);
         bind(FeedService.class).in(Singleton.class);
+        bind(MonitoringService.class).in(Singleton.class);
     }
 
     public void start() throws NewsfeedException {

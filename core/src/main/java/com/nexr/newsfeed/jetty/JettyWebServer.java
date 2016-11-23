@@ -12,9 +12,11 @@ import com.nexr.newsfeed.jpa.JPAService;
 import com.nexr.newsfeed.rest.Activities;
 import com.nexr.newsfeed.rest.Feeds;
 import com.nexr.newsfeed.rest.Followings;
+import com.nexr.newsfeed.rest.Monitors;
 import com.nexr.newsfeed.rest.Users;
 import com.nexr.newsfeed.service.FeedService;
 import com.nexr.newsfeed.service.FollowingService;
+import com.nexr.newsfeed.service.MonitoringService;
 import com.nexr.newsfeed.service.UserService;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
@@ -113,6 +115,7 @@ public class JettyWebServer {
                     bind(Followings.class);
                     bind(Activities.class);
                     bind(Feeds.class);
+                    bind(Monitors.class);
                     serve("/*").with(GuiceContainer.class);
                 }
 
@@ -134,6 +137,11 @@ public class JettyWebServer {
                 @Provides
                 FeedService provideFeedService() {
                     return bInjector.getInstance(FeedService.class);
+                }
+
+                @Provides
+                MonitoringService provideMonitoringService() {
+                    return bInjector.getInstance(MonitoringService.class);
                 }
             });
         }
